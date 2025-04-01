@@ -1,11 +1,15 @@
 <x-app-layout>
     <div class="container mt-5">
+       
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary">Lista de Productos</h2>
-            <a href="{{ route('productos.create') }}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Crear Producto
-            </a>
+            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+                <a href="{{ route('productos.create') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Crear Producto
+                </a>
+            @endif
         </div>
+        
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -28,7 +32,9 @@
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
+                            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
                             <th class="text-center">Acciones</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -39,6 +45,7 @@
                                 <td>{{ $producto->descripcion }}</td>
                                 <td>{{ $producto->precio }}</td>
                                 <td>{{ $producto->stock }}</td>
+                                @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
                                 <td class="text-center">
                                     <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Editar
@@ -51,6 +58,7 @@
                                         </button>
                                     </form>
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

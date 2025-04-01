@@ -49,18 +49,20 @@
             @endif
         </header>
         <div class="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-8 text-center">
-            <h1 class="text-4xl font-bold">Bienvenido a Nuestra Empresa</h1>
-            <p class="mt-4 text-lg">Ofrecemos los mejores productos con la mejor calidad y servicio.</p>
+        <h1 class="text-4xl font-bold">Bienvenido a CiverZone</h1>
+            <p class="mt-4 text-lg">CiberZone: Donde la tecnología cobra vida</p>
     
             <section class="mt-6">
                 <h2 class="text-2xl font-semibold">¿Quiénes Somos?</h2>
-                <p class="mt-2">Somos una empresa dedicada a la venta de productos de alta calidad con precios accesibles.</p>
+                <p class="mt-2">En CiberZone, somos apasionados por la tecnología y el entretenimiento digital. Nos especializamos en ofrecer productos de alta calidad para el mundo del cómputo, gaming, producción de video y tecnología en general. Nuestro objetivo es brindar a nuestros clientes las mejores herramientas para potenciar su experiencia digital, con productos innovadores y un servicio excepcional.</p>
             </section>
     
             <section class="mt-6">
                 <h2 class="text-2xl font-semibold">Contáctanos</h2>
-                <p class="mt-2">Correo: contacto@empresa.com</p>
-                <p>Teléfono: +52 123 456 7890</p>
+                <p class="mt-2">📍 Dirección: Sexta Pte. Nte. 1090-1180, Tuxtla GutierrezS</p>
+                <p class="mt-2">📧 Correo electrónico:contactoCiverZ@empresa.com</p>
+                <p>📞 Teléfono: +52 961 191 5387</p>
+                <p>📱 Redes sociales: @CiverZoneOF</p>
             </section>
         </div>
 

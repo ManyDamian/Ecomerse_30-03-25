@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Cliente;
+//use App\Models\Cliente;
 use App\Models\User; // Importa el modelo correcto
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -41,7 +41,7 @@ class ClienteController extends Controller
     ]);
 
     // Guardar el cliente con contraseña encriptada
-        Cliente::create([
+        User::create([
         'name' => $validated['name'],
         'email' => $validated['email'],
         'password' => bcrypt($validated['password']),

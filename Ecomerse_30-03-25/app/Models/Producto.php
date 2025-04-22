@@ -9,4 +9,10 @@ class Producto extends Model
     use HasFactory;
 
     protected $fillable = ['nombre', 'descripcion', 'precio', 'stock'];
+
+    public function carritos()
+    {
+    return $this->belongsToMany(Carrito::class, 'carrito_producto')->withTimestamps();
+    }
+
 }

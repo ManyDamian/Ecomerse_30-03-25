@@ -1,14 +1,21 @@
 <?php
 
 namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
+use App\Models\Categoria;
+use App\Policies\CategoriaPolicy;
+use App\Models\Carrito;
+use App\Policies\CarritoPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
+    protected $policies = [
+        Categoria::class => CategoriaPolicy::class,
+        Carrito::class => CarritoPolicy::class,
+    ];
     public function register(): void
     {
         //

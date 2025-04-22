@@ -3,6 +3,8 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,7 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::resource('clientes', ClienteController::class);
     Route::resource('productos', ProductoController::class);
-
+    Route::resource('carritos', CarritoController::class);
+    Route::resource('ventas', VentaController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -13,9 +13,9 @@ class Carrito extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function productos()
+    public function producto()
     {
-        return $this->belongsToMany(Producto::class, 'carrito_producto')->withTimestamps();
+        return $this->belongsTo(Producto::class);
     }
 }
 

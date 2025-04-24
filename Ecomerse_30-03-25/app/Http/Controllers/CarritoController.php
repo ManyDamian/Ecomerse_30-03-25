@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCarritoRequest;
 use App\Models\Carrito;
 use App\Models\Producto;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 
 class CarritoController extends Controller
@@ -23,7 +25,14 @@ class CarritoController extends Controller
 
     public function store(StoreCarritoRequest $request)
     {
-        Carrito::create($request->validated());
+        $validated = $request->validated();
+
+        $carrito = new Carrito();
+        $carrito->user_id = Auth::id(); // 👈 Este valor es obligatorio
+        $carrito->producto_id = $validated['producto_id'];
+        $carrito->cantidad = $validated['cantidad'];
+        $carrito->save();
+
         return redirect()->route('carritos.index')->with('success', 'Producto agregado al carrito.');
     }
 

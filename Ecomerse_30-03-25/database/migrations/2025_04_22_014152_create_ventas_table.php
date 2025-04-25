@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained()->onDelete('cascade'); // Referencia al usuario
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total', 10, 2);
             $table->timestamp('fecha_venta')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();

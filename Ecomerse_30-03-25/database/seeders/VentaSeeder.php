@@ -13,7 +13,7 @@ class VentaSeeder extends Seeder
     public function run(): void
     {
         Venta::create([
-            'usuario_id' => 1,
+            'user_id' => 2,
             'total' => 200.00,
         ]);
     }

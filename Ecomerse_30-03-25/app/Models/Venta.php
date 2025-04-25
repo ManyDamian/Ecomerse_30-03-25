@@ -13,8 +13,9 @@ class Venta extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Relación uno a muchos con Producto
     public function productos()
     {
-        return $this->belongsToMany(Producto::class, 'producto_venta')->withPivot('cantidad')->withTimestamps();
+        return $this->hasMany(Producto::class, 'venta_id');
     }
 }

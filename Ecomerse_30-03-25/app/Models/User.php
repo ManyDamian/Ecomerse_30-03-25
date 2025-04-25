@@ -46,4 +46,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Relación a través de Carrito
+    public function productos()
+    {
+        return $this->hasManyThrough(Producto::class, Carrito::class, 'user_id', 'id', 'id', 'producto_id');
+    }
 }

@@ -13,4 +13,10 @@ class Categoria extends Model
         'nombre', 
         'descripcion'
     ];
+
+    public function productos ()
+    {
+    //relacion muchos a muchos, un producto puede tener muchas categorias y una categoria puede tener muchos productos
+    return $this->belongsToMany(Producto::class, 'categoria_producto', 'categoria_id', 'producto_id');
+    }
 }

@@ -15,6 +15,11 @@ class Producto extends Model
     return $this->belongsToMany(Carrito::class, 'carrito_producto')->withTimestamps();
     }
 
+    public function ventas()
+    {
+    return $this->belongsToMany(Venta::class, 'producto_venta');
+    }
+    
     //relacion muchos a muchos con categoria    
     public function categorias()
     {

@@ -27,7 +27,7 @@
                         @foreach ($carritos as $carrito)
                             <tr>
                                 <td>{{ $carrito->id }}</td>
-                                <td>{{ $carrito->usuario->name }}</td>
+                                <td>{{ $carrito->user->name }}</td>
                                 <td>{{ $carrito->producto->nombre }}</td>
                                 <td>{{ $carrito->cantidad }}</td>
                                 <td class="text-center">
@@ -44,6 +44,14 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @if(!$carritos->isEmpty())
+                            <form action="{{ route('carrito.comprar') }}" method="POST" class="mb-3">
+                                @csrf
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Comprar
+                                </button>
+                            </form>
+                        @endif
                     </tbody>
                 </table>
             </div>

@@ -50,6 +50,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('carritos', CarritoController::class);
     Route::resource('ventas', VentaController::class);
     Route::resource('categorias', CategoriaController::class);
+    Route::post('/carrito/comprar', [App\Http\Controllers\CarritoController::class, 'comprar'])->name('carrito.comprar');
+
 });
 
 require __DIR__.'/auth.php';

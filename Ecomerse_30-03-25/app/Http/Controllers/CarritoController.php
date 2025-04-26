@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCarritoRequest;
 use App\Models\Carrito;
+use App\Models\Venta;
 use App\Models\Producto;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,12 +27,25 @@ class CarritoController extends Controller
     public function store(StoreCarritoRequest $request)
     {
         $validated = $request->validated();
+        $userId = Auth::id();
 
-        $carrito = new Carrito();
-        $carrito->user_id = Auth::id(); // 👈 Este valor es obligatorio
-        $carrito->producto_id = $validated['producto_id'];
-        $carrito->cantidad = $validated['cantidad'];
-        $carrito->save();
+        // Verifica si ya existe el producto en el carrito del usuario
+        $carritoExistente = Carrito::where('user_id', $userId)
+                            ->where('producto_id', $validated['producto_id'])
+                            ->first();
+
+        if ($carritoExistente) {
+            // Si ya está, solo actualiza la cantidad
+            $carritoExistente->cantidad += $validated['cantidad'];
+            $carritoExistente->save();
+        } else {
+            // Si no, crea un nuevo registro
+            Carrito::create([
+                'user_id' => $userId,
+                'producto_id' => $validated['producto_id'],
+                'cantidad' => $validated['cantidad'],
+            ]);
+        }
 
         return redirect()->route('carritos.index')->with('success', 'Producto agregado al carrito.');
     }
@@ -57,5 +71,33 @@ class CarritoController extends Controller
     {
         $carrito->delete();
         return redirect()->route('carritos.index')->with('success', 'Producto eliminado del carrito.');
+    }
+    public function comprar()
+    {
+        $user = Auth::user();
+
+        $carrito = Carrito::with('producto')->where('user_id', $user->id)->get();
+
+        if ($carrito->isEmpty()) {
+            return redirect()->route('carritos.index')->with('error', 'Tu carrito está vacío.');
+        }
+
+        $total = 0;
+
+        foreach ($carrito as $item) {
+            $total += $item->producto->precio * $item->cantidad;
+        }
+
+        // Crear la venta
+        Venta::create([
+            'user_id' => $user->id,
+            'total' => $total,
+            'estado' => 'completada', // o 'pendiente', depende cómo manejes los estados
+        ]);
+
+        // Vaciar el carrito
+        Carrito::where('user_id', $user->id)->delete();
+
+        return redirect()->route('carritos.index')->with('success', '¡Compra realizada con éxito!');
     }
 }

@@ -14,6 +14,9 @@
         <div class="mb-4">
             <a href="{{ route('productos.index') }}" class="btn btn-primary">Gestión de Productos</a>
         </div>
+        <div class="mb-4">
+            <a href="{{ route('categorias.index') }}" class="btn btn-primary">Gestión de categorias</a>
+        </div>
     @else
         <h2 class="text-xl font-semibold mb-4">No puedes estar aquí.</h2>
     @endif

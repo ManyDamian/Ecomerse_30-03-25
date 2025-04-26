@@ -22,7 +22,6 @@ class StoreCarritoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'producto_id' => 'required|exists:productos,id',
             'cantidad' => 'required|integer|min:1',
         ];

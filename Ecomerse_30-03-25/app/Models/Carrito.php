@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\User;
+use App\Models\Producto;
 use Illuminate\Database\Eloquent\Model;
 
 class Carrito extends Model
 {
-    protected $fillable = ['usuario_id'];
+    protected $fillable = ['user_id','producto_id', 'cantidad'];
 
     // Relación inversa con Usuario
-    public function usuario()
+    public function user()
     {
-        return $this->belongsTo(Usuario::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relación con Producto
@@ -19,5 +20,6 @@ class Carrito extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
+    
 }
 

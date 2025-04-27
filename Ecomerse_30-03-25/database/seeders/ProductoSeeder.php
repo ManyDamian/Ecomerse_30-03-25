@@ -25,5 +25,9 @@ class ProductoSeeder extends Seeder
         foreach ($productos as $producto) {
             Producto::create($producto);
         }
+        // Asociar categorías a productos
+        $producto = Producto::first();
+        $producto->categorias()->attach([1, 2]); // Aquí 1 y 2 son los IDs de las categorías
+
     }
 }

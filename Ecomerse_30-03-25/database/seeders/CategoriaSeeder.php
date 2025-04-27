@@ -15,6 +15,7 @@ class CategoriaSeeder extends Seeder
      */
     public function run()
     {
+        /*
         // Crea categorías de ejemplo
         Categoria::create([
             'nombre' => 'Tecnología',
@@ -30,5 +31,10 @@ class CategoriaSeeder extends Seeder
             'nombre' => 'Electrodomésticos',
             'descripcion' => 'Electrodomésticos y artículos para el hogar',
         ]);
+
+        */
+
+        // Crear 10 categorías utilizando el Factory
+        Categoria::factory()->count(10)->create();
     }
 }

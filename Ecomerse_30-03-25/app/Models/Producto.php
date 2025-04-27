@@ -10,10 +10,7 @@ class Producto extends Model
 
     protected $fillable = ['nombre', 'descripcion', 'precio', 'stock'];
 
-    public function carritos()
-    {
-    return $this->belongsToMany(Carrito::class, 'carrito_producto')->withTimestamps();
-    }
+    
 
     public function ventas()
     {
@@ -26,9 +23,6 @@ class Producto extends Model
     return $this->belongsToMany(Categoria::class, 'categoria_producto', 'producto_id', 'categoria_id');
     }
 
-    public function venta()
-    {
-        return $this->belongsTo(Venta::class);
-    }
+   
 
 }

@@ -34,6 +34,25 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password123'),
         ]);
 
-        // Aquí podrías crear más usuarios si lo deseas...
+        User::create([
+            'name' => 'Julieta venegas',
+            'email' => 'venejul@empleado.com',
+            'password' => Hash::make('password123'),
+            'role' => 'empleado'
+        ]);
+
+        User::create([
+            'name' => 'Luis Miguel',
+            'email' => 'luismi@empleado.com',
+            'password' => Hash::make('password123'),
+            'role' => 'empleado'
+        ]);
+
+        User::create([
+            'name' => 'Nicolas Jesus',
+            'email' => 'nicojeuss@empleado.com',
+            'password' => Hash::make('fornitesenal'),
+            'role' => 'empleado'
+        ]);
     }
 }

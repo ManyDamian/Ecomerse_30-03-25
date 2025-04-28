@@ -9,26 +9,27 @@ class VentaPolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->role === 'gerente';
     }
-
+    
     public function view(User $user, Venta $venta): bool
     {
-        return $user->id === $venta->user_id;
+        return $user->role === 'gerente' || $user->id === $venta->user_id;
     }
-
+    
     public function create(User $user): bool
     {
-        return true;
+        return $user->role === 'cliente';
     }
-
+    
     public function update(User $user, Venta $venta): bool
     {
-        return $user->id === $venta->user_id;
+        return $user->role === 'gerente';
     }
-
+    
     public function delete(User $user, Venta $venta): bool
     {
-        return $user->id === $venta->user_id;
+        return $user->role === 'gerente';
     }
+    
 }

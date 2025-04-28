@@ -2,9 +2,11 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary">Lista de Carritos</h2>
+            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
             <a href="{{ route('carritos.create') }}" class="btn btn-success">
                 <i class="fas fa-plus-circle"></i> Crear Carrito
             </a>
+        @endif
         </div>
 
         @if($carritos->isEmpty())

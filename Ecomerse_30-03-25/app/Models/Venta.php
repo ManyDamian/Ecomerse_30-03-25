@@ -14,6 +14,12 @@ class Venta extends Model
        // return $this->belongsTo(User::class);
     }
 
+    // Comprador
+    public function comprador()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     // Relación uno a muchos con Producto
     public function productos()
     {

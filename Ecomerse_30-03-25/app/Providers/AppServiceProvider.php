@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         Categoria::class => CategoriaPolicy::class,
         Carrito::class => CarritoPolicy::class,
         Venta::class => VentaPolicy::class,
+        User::class => UserPolicy::class,
     ];
     public function register(): void
     {

@@ -27,6 +27,11 @@ class VentaPolicy
         return $user->role === 'gerente';
     }
     
+    public function validateVenta(User $user, Venta $venta): bool
+    {
+        return $user->role === 'gerente';
+    }
+    
     public function delete(User $user, Venta $venta): bool
     {
         return $user->role === 'gerente';

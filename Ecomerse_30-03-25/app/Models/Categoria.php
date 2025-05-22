@@ -14,6 +14,19 @@ class Categoria extends Model
         'descripcion'
     ];
 
+     // Relación hasManyThrough para llegar a compradores
+     public function compradores()
+     {
+         return $this->hasManyThrough(
+             User::class,
+             Venta::class,
+             'producto_id',  // Foreign key en ventas
+             'id',           // Foreign key en users
+             'id',           // Local key en categorias -> productos (a través de belongsToMany)
+             'user_id'       // Foreign key en ventas
+         );
+     }
+     
     public function productos ()
     {
     //relacion muchos a muchos, un producto puede tener muchas categorias y una categoria puede tener muchos productos

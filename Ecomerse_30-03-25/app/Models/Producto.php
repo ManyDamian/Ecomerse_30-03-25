@@ -8,10 +8,16 @@ class Producto extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'descripcion', 'precio', 'stock'];
+    protected $fillable = ['nombre', 'descripcion', 'precio', 'stock','user_id','imagenes'];
 
     
 
+    // Relación con el vendedor (cliente que publica el producto)
+    public function vendedor()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
     public function ventas()
     {
     return $this->belongsToMany(Venta::class, 'producto_venta');

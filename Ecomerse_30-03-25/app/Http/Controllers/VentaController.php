@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Venta;
 use App\Models\Producto;
 use App\Models\Carrito;
+use App\Mail\VentaValidadaComprador;
+use App\Mail\VentaValidadaVendedor;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
@@ -86,5 +88,29 @@ class VentaController extends Controller
 
         return redirect()->route('ventas.index')->with('success', 'Venta eliminada.');
     }
+
+    public function validar($id)
+{
+    $venta = Venta::with('productos.vendedor', 'usuario')->findOrFail($id);
+
+    // Authorization: solo el gerente puede validar
+    $this->authorize('validar', $venta);
+
+    // Cambiar estado
+    $venta->estado = 'validada';
+    $venta->save();
+
+    // Enviar correo al comprador
+    Mail::to($venta->usuario->email)->send(new VentaValidadaComprador($venta));
+
+    // Enviar correo a cada vendedor involucrado en la venta
+    foreach ($venta->productos as $producto) {
+        if ($producto->vendedor) {
+            Mail::to($producto->vendedor->email)->send(new VentaValidadaVendedor($venta, $producto));
+        }
+    }
+
+    return redirect()->route('ventas.index')->with('success', 'Venta validada y correos enviados.');
+}
 
 }

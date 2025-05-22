@@ -55,6 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('carritos', CarritoController::class);
     Route::resource('ventas', VentaController::class);
     Route::resource('categorias', CategoriaController::class);
+    Route::post('/ventas/{venta}/validar', [VentaController::class, 'validar'])->name('ventas.validar');
+    Route::get('ventas/{venta}/ticket', [VentaController::class, 'showTicket'])->name('ventas.ticket');
     Route::post('/carrito/comprar', [App\Http\Controllers\CarritoController::class, 'comprar'])->name('carrito.comprar');
     Route::get('/carritos/comprar', [CarritoController::class, 'comprar'])->name('carritos.comprar');
 

@@ -59,7 +59,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
         'privado' => [
         'driver' => 'local',
         'root' => storage_path('app/privado'),

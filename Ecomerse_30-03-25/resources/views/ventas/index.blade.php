@@ -37,10 +37,11 @@
                                 <td>{{ ucfirst($venta->estado) }}</td>
                                 <td>
                                     @if($venta->ticket)
-                                        <a href="{{ route('ventas.ticket', $venta->id) }}" target="_blank">Ver ticket</a>
-                                    @else
-                                        Sin ticket
-                                    @endif
+                                    <a href="{{ route('ventas.ticket', $venta->id) }}" target="_blank">Ver ticket</a>
+                                @else
+                                    Sin ticket
+                                @endif
+                                
                                 </td>
                                 <td>{{ $venta->created_at->format('d-m-Y') }}</td>
                                 <td class="text-center">

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venta extends Model
 {
-    protected $fillable = ['user_id', 'total', 'fecha'];
+    protected $fillable = ['user_id', 'total','ticket', 'estado', 'fecha'];
 
     public function usuario()
     {

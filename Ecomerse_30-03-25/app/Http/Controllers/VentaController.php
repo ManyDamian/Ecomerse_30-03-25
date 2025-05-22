@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Venta;
 use App\Models\Producto;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Carrito;
 use App\Mail\VentaValidadaComprador;
 use App\Mail\VentaValidadaVendedor;
@@ -29,45 +30,62 @@ class VentaController extends Controller
 
     public function store(Request $request)
 {
+    /*
+    dd([
+        'hasFile' => $request->hasFile('ticket'),
+        'fileIsValid' => $request->file('ticket') ? $request->file('ticket')->isValid() : false,
+        'fileInfo' => $request->file('ticket') ? $request->file('ticket')->getClientOriginalName() : null,
+    ]);
+    */
+    // Validar datos recibidos
     $request->validate([
         'productos' => 'required|array',
         'productos.*.id' => 'required|exists:productos,id',
         'productos.*.cantidad' => 'required|integer|min:1',
-        'ticket' => 'required|image|max:2048',
+        'ticket' => 'required|image|max:2048', // obligatorio y tipo imagen máximo 2MB
     ]);
 
-    if (!$request->hasFile('ticket')) {
-        return back()->withErrors(['ticket' => 'El archivo del ticket es obligatorio.']);
+    // Validar que venga archivo y que sea válido
+    if (!$request->hasFile('ticket') || !$request->file('ticket')->isValid()) {
+        return back()->withErrors(['ticket' => 'El archivo del ticket es obligatorio y debe ser válido.']);
     }
 
-    $ticketFile = $request->file('ticket');
-
-    if (!$ticketFile->isValid()) {
-        return back()->withErrors(['ticket' => 'Error al subir el archivo del ticket.']);
-    }
-
-    // Guardar el ticket en disco privado
-    $pathTicket = $ticketFile->store('tickets', 'privado');
-
+    // Guardar el ticket en disco privado (configura el disco 'privado' en config/filesystems.php)
+    $pathTicket = $request->file('ticket')->store('tickets', 'privado');
+    //dd($pathTicket);
+    // Calcular total sumando precio * cantidad
     $total = 0;
     foreach ($request->productos as $item) {
         $producto = Producto::find($item['id']);
         $total += $producto->precio * $item['cantidad'];
     }
 
-    // Crear la venta ya con el path del ticket
+    // Crear la venta
     $venta = Venta::create([
         'user_id' => auth()->id(),
         'total' => $total,
         'ticket' => $pathTicket,
-        'estado' => 'pendiente',
+        'estado' => 'pendiente', // estado inicial
     ]);
 
+    // Guardar relación productos - venta con cantidades
     foreach ($request->productos as $item) {
         $venta->productos()->attach($item['id'], ['cantidad' => $item['cantidad']]);
     }
+    // Carrito::where('user_id', auth()->id())->delete();
 
     return redirect()->route('ventas.index')->with('success', 'Venta registrada con éxito.');
+}
+
+public function ticket($id)
+{
+    $venta = Venta::findOrFail($id);
+
+    if (!$venta->ticket || !Storage::disk('app/privado')->exists($venta->ticket)) {
+        abort(404, 'Ticket no encontrado');
+    }
+
+    return Storage::disk('app/privado')->download($venta->ticket);
 }
 
 
@@ -77,17 +95,32 @@ class VentaController extends Controller
         return view('ventas.edit', compact('venta'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'total' => 'required|numeric|min:0',
-        ]);
+   public function update(Request $request, $id)
+{
+    $venta = Venta::findOrFail($id);
 
-        $venta = Venta::findOrFail($id);
-        $venta->update($request->only(['user_id', 'total', 'fecha']));
+    // Validar campos básicos
+    $request->validate([
+        'total' => 'required|numeric|min:0',
+        'validar' => 'sometimes|boolean',
+    ]);
 
-        return redirect()->route('ventas.index')->with('success', 'Venta actualizada correctamente.');
+    // Actualizar total y otros campos permitidos
+    $venta->total = $request->input('total');
+
+    // Solo el gerente puede validar la venta
+    if ($request->has('validar') && $request->input('validar')) {
+        $this->authorize('validar', $venta);  // autorización
+        if ($venta->estado === 'pendiente') {
+            $venta->estado = 'validada';
+        }
     }
+
+    $venta->save();
+
+    return redirect()->route('ventas.index')->with('success', 'Venta actualizada correctamente.');
+}
+
 
     public function show($id)
     {

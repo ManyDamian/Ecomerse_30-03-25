@@ -26,6 +26,7 @@ class ProductoController extends Controller
 
     public function store(Request $request)
 {
+    // Primero valida los campos del formulario (sin incluir user_id)
     $validated = $request->validate([
         'nombre' => 'required|string|max:255',
         'descripcion' => 'nullable|string',
@@ -33,11 +34,14 @@ class ProductoController extends Controller
         'stock' => 'required|integer',
     ]);
 
-    // Crear el producto con los datos validados
+    // Luego añade el user_id manualmente
+    
+
     Producto::create($validated);
 
     return redirect()->route('productos.index')->with('success', 'Producto registrado correctamente');
 }
+
 
     /**
      * Display the specified resource.

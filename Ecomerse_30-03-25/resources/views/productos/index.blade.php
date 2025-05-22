@@ -10,7 +10,6 @@
             @endif
         </div>
         
-
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -32,11 +31,14 @@
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
+                            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+                                <th>Vendedor</th>
+                            @endif
                             @if(auth()->user()->role === 'cliente')
-                            <th class="text-center">Agregar al carrito</th>
+                                <th class="text-center">Agregar al carrito</th>
                             @endif
                             @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                            <th class="text-center">Acciones</th>
+                                <th class="text-center">Acciones</th>
                             @endif
                         </tr>
                     </thead>
@@ -49,18 +51,21 @@
                                 <td>{{ $producto->precio }}</td>
                                 <td>{{ $producto->stock }}</td>
                                 @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                                <td class="text-center">
-                                    <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                    <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </button>
-                                    </form>
-                                </td>
+                                    <td>{{ $producto->vendedor->name ?? 'Desconocido' }}</td>
+                                @endif
+                                @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+                                    <td class="text-center">
+                                        <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                        <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
+                                                <i class="fas fa-trash-alt"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    </td>
                                 @endif
                                 @if(auth()->user()->role === 'cliente')
                                     <td class="text-center">

@@ -2,9 +2,12 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary">Lista de Ventas</h2>
-            <a href="{{ route('ventas.create') }}" class="btn btn-success">
-                <i class="fas fa-plus-circle"></i> Crear Venta
-            </a>
+            
+            @can('create', App\Models\Venta::class)
+                <a href="{{ route('ventas.create') }}" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> Crear Venta
+                </a>
+            @endcan
         </div>
 
         @if($ventas->isEmpty())
@@ -19,6 +22,8 @@
                             <th>ID</th>
                             <th>Usuario</th>
                             <th>Total</th>
+                            <th>Estado</th>
+                            <th>Ticket</th>
                             <th>Fecha</th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -28,19 +33,32 @@
                             <tr>
                                 <td>{{ $venta->id }}</td>
                                 <td>{{ $venta->usuario->name }}</td>
-                                <td>${{ $venta->total }}</td>
+                                <td>${{ number_format($venta->total, 2) }}</td>
+                                <td>{{ ucfirst($venta->estado) }}</td>
+                                <td>
+                                    @if($venta->ticket)
+                                        <a href="{{ route('ventas.ticket', $venta->id) }}" target="_blank">Ver ticket</a>
+                                    @else
+                                        Sin ticket
+                                    @endif
+                                </td>
                                 <td>{{ $venta->created_at->format('d-m-Y') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                    <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </button>
-                                    </form>
+                                    @can('update', $venta)
+                                        <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                    @endcan
+
+                                    @can('delete', $venta)
+                                        <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
+                                                <i class="fas fa-trash-alt"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @endforeach

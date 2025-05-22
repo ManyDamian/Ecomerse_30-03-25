@@ -42,6 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    
+    Route::get('ventas/{venta}/ticket', [VentaController::class, 'showTicket'])
+    ->name('ventas.ticket')
+    ->middleware('auth');
+    
     Route::middleware(['auth'])->group(function () {
         Route::resource('empleados', EmpleadoController::class);
     });
@@ -51,6 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('ventas', VentaController::class);
     Route::resource('categorias', CategoriaController::class);
     Route::post('/carrito/comprar', [App\Http\Controllers\CarritoController::class, 'comprar'])->name('carrito.comprar');
+    Route::get('/carritos/comprar', [CarritoController::class, 'comprar'])->name('carritos.comprar');
 
 });
 

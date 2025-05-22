@@ -16,6 +16,7 @@ class VentaSeeder extends Seeder
         $venta = Venta::create([
             'user_id' => 2,
             'total' => 200.00,
+            'ticket' => 'ruta/al/ticket/fake.jpg', // ejemplo
         ]);
 
         // Asociar productos a la venta con cantidad

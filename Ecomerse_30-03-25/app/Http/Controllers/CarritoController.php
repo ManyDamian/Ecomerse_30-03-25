@@ -73,31 +73,16 @@ class CarritoController extends Controller
         return redirect()->route('carritos.index')->with('success', 'Producto eliminado del carrito.');
     }
     public function comprar()
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        $carrito = Carrito::with('producto')->where('user_id', $user->id)->get();
+    $carritos = Carrito::with('producto')->where('user_id', $user->id)->get();
 
-        if ($carrito->isEmpty()) {
-            return redirect()->route('carritos.index')->with('error', 'Tu carrito está vacío.');
-        }
-
-        $total = 0;
-
-        foreach ($carrito as $item) {
-            $total += $item->producto->precio * $item->cantidad;
-        }
-
-        // Crear la venta
-        Venta::create([
-            'user_id' => $user->id,
-            'total' => $total,
-            'estado' => 'completada', // o 'pendiente', depende cómo manejes los estados
-        ]);
-
-        // Vaciar el carrito
-        Carrito::where('user_id', $user->id)->delete();
-
-        return redirect()->route('carritos.index')->with('success', '¡Compra realizada con éxito!');
+    if ($carritos->isEmpty()) {
+        return redirect()->route('carritos.index')->with('error', 'Tu carrito está vacío.');
     }
+
+    return view('ventas.create', compact('carritos'));
+}
+
 }

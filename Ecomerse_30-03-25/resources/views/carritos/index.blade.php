@@ -47,13 +47,10 @@
                             </tr>
                         @endforeach
                         @if(!$carritos->isEmpty())
-                            <form action="{{ route('carrito.comprar') }}" method="POST" class="mb-3">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-shopping-cart"></i> Comprar
-                                </button>
-                            </form>
-                        @endif
+                        <a href="{{ route('ventas.create') }}" class="btn btn-primary mb-3">
+                            <i class="fas fa-shopping-cart"></i> Comprar
+                        </a>
+                      @endif
                     </tbody>
                 </table>
             </div>

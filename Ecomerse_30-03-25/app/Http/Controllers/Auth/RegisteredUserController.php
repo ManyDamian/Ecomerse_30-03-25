@@ -33,6 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'subrol' => ['required', 'in:comprador,vendedor'],
         ]);
 
         $user = User::create([
@@ -40,6 +41,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'cliente', // Asignamos "cliente" por defecto
+            'subrol' => $request->subrol,
         ]);
 
         event(new Registered($user));

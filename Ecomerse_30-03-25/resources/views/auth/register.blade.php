@@ -44,6 +44,15 @@
                 {{ __('Already registered?') }}
             </a>
 
+            <!-- Subrol -->
+            <div class="mt-4">
+                <x-input-label for="subrol" :value="__('¿Qué deseas hacer en la plataforma?')" />
+                <select id="subrol" name="subrol" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="comprador">Comprar productos</option>
+                    <option value="vendedor">Vender productos</option>
+                </select>
+                <x-input-error :messages="$errors->get('subrol')" class="mt-2" />
+            </div>
             <x-primary-button class="ms-4">
                 {{ __('Register') }}
             </x-primary-button>

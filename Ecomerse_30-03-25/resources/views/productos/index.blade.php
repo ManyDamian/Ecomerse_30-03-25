@@ -23,7 +23,7 @@
             </div>
         @else
             <div class="table-responsive">
-                <table class="table table-hover table-bordered shadow-sm">
+                <table class="table table-hover table-bordered shadow-sm align-middle">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
@@ -31,6 +31,8 @@
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
+                            <th>Imágenes</th>
+                            <th>Categorías</th>
                             @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
                                 <th>Vendedor</th>
                             @endif
@@ -48,8 +50,25 @@
                                 <td>{{ $producto->id }}</td>
                                 <td>{{ $producto->nombre }}</td>
                                 <td>{{ $producto->descripcion }}</td>
-                                <td>{{ $producto->precio }}</td>
+                                <td>{{ number_format($producto->precio, 2) }}</td>
                                 <td>{{ $producto->stock }}</td>
+                                <td>
+                                    @if(is_array($producto->imagenes) && count($producto->imagenes) > 0)
+                                        @foreach($producto->imagenes as $img)
+                                            <img src="{{ asset('storage/' . $img) }}" alt="Imagen del producto" width="60" height="60" class="me-1 mb-1 rounded" style="object-fit: cover;">
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">Sin imagen</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @forelse ($producto->categorias as $categoria)
+                                        <span class="badge bg-primary">{{ $categoria->nombre }}</span>
+                                    @empty
+                                        <span class="text-muted">Sin categoría</span>
+                                    @endforelse
+                                </td>
+
                                 @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
                                     <td>{{ $producto->vendedor->name ?? 'Desconocido' }}</td>
                                 @endif

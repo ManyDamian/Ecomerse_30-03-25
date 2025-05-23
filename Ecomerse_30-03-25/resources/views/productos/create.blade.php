@@ -1,7 +1,7 @@
 <x-app-layout>
     @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
         <h1>Nuevo Producto</h1>
-        <form action="{{ route('productos.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
             @csrf
             <div>
                 <label for="nombre">Nombre</label>
@@ -18,6 +18,10 @@
             <div>
                 <label for="stock">Stock</label>
                 <input type="number" name="stock" id="stock" required>
+            </div>
+            <div>
+                <label for="imagenes">Imágenes</label>
+                <input type="file" name="imagenes[]" id="imagenes" multiple required>
             </div>
             <button type="submit">Guardar</button>
         </form>

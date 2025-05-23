@@ -1,5 +1,5 @@
 <x-app-layout>
-    @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+    @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
         <h1>Nuevo Producto</h1>
         <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
             @csrf

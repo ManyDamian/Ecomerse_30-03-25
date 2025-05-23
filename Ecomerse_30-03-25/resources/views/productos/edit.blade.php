@@ -56,8 +56,6 @@
                 </select>
                 <small class="form-text text-muted">Usa Ctrl (o Cmd) para seleccionar varias categorías.</small>
             </div>
-
-            
             <button type="submit">Actualizar</button>
         </form>
     @else 

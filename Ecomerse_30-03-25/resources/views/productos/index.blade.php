@@ -3,7 +3,7 @@
        
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary">Lista de Productos</h2>
-            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
                 <a href="{{ route('productos.create') }}" class="btn btn-success">
                     <i class="fas fa-plus"></i> Crear Producto
                 </a>

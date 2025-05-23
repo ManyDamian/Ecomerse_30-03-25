@@ -73,17 +73,19 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
 {
-    $cliente = User::findOrFail($id); // Asegúrate de que busca en la tabla correcta
+    $cliente = User::findOrFail($id);
 
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        'subrol' => 'required|in:comprador,vendedor', // Validación del subrol
     ]);
 
-    $cliente->update($validated);
+    $cliente->update($validated); // Actualiza también el subrol automáticamente
 
     return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente');
 }
+
 
 
     /**

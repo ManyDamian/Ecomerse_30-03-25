@@ -22,35 +22,37 @@
             @else
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered shadow-sm">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($clientes as $cliente)
-                                <tr>
-                                    <td>{{ $cliente->id }}</td>
-                                    <td>{{ $cliente->name }}</td>
-                                    <td>{{ $cliente->email }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </a>
-                                        <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
-                                                <i class="fas fa-trash-alt"></i> Eliminar
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Subrol</th> <!-- Nueva columna -->
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientes as $cliente)
+                        <tr>
+                            <td>{{ $cliente->id }}</td>
+                            <td>{{ $cliente->name }}</td>
+                            <td>{{ $cliente->email }}</td>
+                            <td>{{ ucfirst($cliente->subrol) }}</td> <!-- Mostrar subrol -->
+                            <td class="text-center">
+                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
                     </table>
                 </div>
             @endif

@@ -14,8 +14,11 @@ class CarritoController extends Controller
 {
     public function index()
     {
-        $carritos = Carrito::with('producto', 'user')->get();
-        return view('carritos.index', compact('carritos'));
+        $carritos = Carrito::with(['producto', 'user'])
+        ->where('user_id', auth()->id())
+        ->get();
+
+    return view('carritos.index', compact('carritos'));
     }
 
     public function create()

@@ -34,6 +34,11 @@
                         @endforeach
                     </tbody>
                 </table>
+                    <div class="mb-3">
+                    <a href="{{ route('productos.index') }}" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> Agregar más Productos
+                    </a>
+                </div>
 
                 <div class="mb-3">
                     <label for="ticket" class="form-label">Subir ticket bancario (imagen):</label>

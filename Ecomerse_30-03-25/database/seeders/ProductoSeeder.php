@@ -11,8 +11,8 @@ class ProductoSeeder extends Seeder
     public function run(): void
     {
         $productos = [
-            ['nombre' => 'Monitor 24" LG', 'descripcion' => 'Monitor IPS Full HD', 'precio' => 3200.00, 'stock' => 15,'user_id' => 2, 'imagenes' => ['/productos/p1.jpg']],
-            ['nombre' => 'Teclado Mecánico Redragon', 'descripcion' => 'Retroiluminado RGB para gaming', 'precio' => 890.00, 'stock' => 30,'user_id' => 3, 'imagenes' => ['/productos/p2.jpg']],
+            ['nombre' => 'Monitor 24 LG', 'descripcion' => 'Monitor IPS Full HD', 'precio' => 3200.00, 'stock' => 15,'user_id' => 2, 'imagenes' => ['']],
+            ['nombre' => 'Teclado Mecánico Redragon', 'descripcion' => 'Retroiluminado RGB para gaming', 'precio' => 890.00, 'stock' => 30,'user_id' => 3, 'imagenes' => ['']],
             /*['nombre' => 'Bocinas Logitech Z313', 'descripcion' => 'Sistema 2.1 para PC', 'precio' => 760.00, 'stock' => 20],
             ['nombre' => 'Aspiradora Xiaomi', 'descripcion' => 'Aspiradora inteligente robot', 'precio' => 4599.00, 'stock' => 10],
             ['nombre' => 'Mouse Gamer Razer', 'descripcion' => 'Mouse ergonómico con sensor óptico', 'precio' => 1150.00, 'stock' => 25],

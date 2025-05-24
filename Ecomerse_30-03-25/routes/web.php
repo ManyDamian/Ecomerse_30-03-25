@@ -61,8 +61,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/carrito/comprar', [App\Http\Controllers\CarritoController::class, 'comprar'])->name('carrito.comprar');
     Route::get('/carritos/comprar', [CarritoController::class, 'comprar'])->name('carritos.comprar');
     Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
+    Route::get('/estadistica/index', [AdminDashboardController::class, 'index'])
+        ->name('estadistica.index');
 });
 
 });

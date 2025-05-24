@@ -1,39 +1,47 @@
 <x-app-layout>
-    <div class="container">
-        @if(auth()->user()->role === 'gerente')
-            <h2>Editar Empleado</h2>
+    @if(auth()->user()->role === 'gerente')
+        <div class="flex justify-center mt-10">
+            <form action="{{ route('empleados.update', $empleado->id) }}" method="POST" class="flex flex-col gap-4 max-w-xl w-full bg-white p-6 rounded shadow">
+                <h1 class="text-2xl font-bold mb-4 text-center">Editar Empleado</h1>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('empleados.update', $empleado->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ $empleado->name }}" required>
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">¡Ups!</strong>
+                        <span class="block sm:inline">Revisa los siguientes errores:</span>
+                        <ul class="mt-2 list-disc list-inside text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div>
+                    <label for="name" class="block font-semibold mb-1">Nombre</label>
+                    <input type="text" id="name" name="name" value="{{ old('name', $empleado->name) }}" required class="w-full border rounded px-3 py-2">
                 </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ $empleado->email }}" required>
+                <div>
+                    <label for="email" class="block font-semibold mb-1">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" value="{{ old('email', $empleado->email) }}" required class="w-full border rounded px-3 py-2">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <div class="flex justify-between mt-4">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold px-5 py-2 rounded flex items-center gap-2">
+                        <i class="fas fa-save"></i> Actualizar
+                    </button>
+                    <a href="{{ route('empleados.index') }}" class="border border-gray-400 text-gray-700 hover:bg-gray-100 px-5 py-2 rounded flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
             </form>
-
-            <a href="{{ route('empleados.index') }}" class="btn btn-secondary mt-3">Volver</a>
         </div>
-    
-        @else 
+    @else
+        <div class="mt-10 text-center">
             <h2 class="text-xl font-semibold mb-4">No puedes estar aquí.</h2>
-        @endif
+        </div>
+    @endif
 </x-app-layout>

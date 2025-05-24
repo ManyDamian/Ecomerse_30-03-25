@@ -1,99 +1,99 @@
 <x-app-layout>
-    <div class="container mt-5">
-       
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-primary">Lista de Productos</h2>
+    <div class="max-w-7xl mx-auto mt-10 px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <h2 class="text-2xl font-bold text-black-700 flex items-center gap-2">
+                <i class="fas fa-box-open"></i> Lista de Productos
+            </h2>
+
             @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
-                <a href="{{ route('productos.create') }}" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Crear Producto
+                <a href="{{ route('productos.create') }}" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-black text-sm font-medium rounded shadow">
+                    <i class="fas fa-plus-circle mr-2"></i> Crear Producto
                 </a>
             @endif
         </div>
-        
+
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded shadow flex items-center gap-2">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
 
         @if($productos->isEmpty())
-            <div class="alert alert-info text-center">
+            <div class="bg-blue-100 text-blue-800 text-sm text-center px-4 py-3 rounded shadow flex items-center justify-center gap-2">
                 <i class="fas fa-info-circle"></i> No hay productos registrados.
             </div>
         @else
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered shadow-sm align-middle">
-                    <thead class="table-dark">
+            <div class="w-full bg-white shadow rounded-lg overflow-x-auto">
+                <table class="w-full table-auto divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-800 text-white">
                         <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Imágenes</th>
-                            <th>Categorías</th>
+                            <th class="px-4 py-2 text-left font-semibold">ID</th>
+                            <th class="px-4 py-2 text-left font-semibold">Nombre</th>
+                            <th class="px-4 py-2 text-left font-semibold">Descripción</th>
+                            <th class="px-4 py-2 text-left font-semibold">Precio</th>
+                            <th class="px-4 py-2 text-left font-semibold">Stock</th>
+                            <th class="px-4 py-2 text-left font-semibold">Imágenes</th>
+                            <th class="px-4 py-2 text-left font-semibold">Categorías</th>
                             @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                                <th>Vendedor</th>
+                                <th class="px-4 py-2 text-left font-semibold">Vendedor</th>
                             @endif
                             @if(auth()->user()->role === 'cliente')
-                                <th class="text-center">Agregar al carrito</th>
+                                <th class="px-4 py-2 text-center font-semibold">Agregar al carrito</th>
                             @endif
-                            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                                <th class="text-center">Acciones</th>
+                            @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
+                                <th class="px-4 py-2 text-center font-semibold">Acciones</th>
                             @endif
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-gray-200 text-gray-800">
                         @foreach ($productos as $producto)
-                            <tr>
-                                <td>{{ $producto->id }}</td>
-                                <td>{{ $producto->nombre }}</td>
-                                <td>{{ $producto->descripcion }}</td>
-                                <td>{{ number_format($producto->precio, 2) }}</td>
-                                <td>{{ $producto->stock }}</td>
-                                <td>
-                                    @if(is_array($producto->imagenes) && count($producto->imagenes) > 0)
-                                        @foreach($producto->imagenes as $img)
-                                            <img src="{{ asset('storage/' . $img) }}" alt="Imagen del producto" width="60" height="60" class="me-1 mb-1 rounded" style="object-fit: cover;">
-                                        @endforeach
-                                    @else
-                                        <span class="text-muted">Sin imagen</span>
-                                    @endif
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2">{{ $producto->id }}</td>
+                                <td class="px-4 py-2">{{ $producto->nombre }}</td>
+                                <td class="px-4 py-2">{{ $producto->descripcion }}</td>
+                                <td class="px-4 py-2">${{ number_format($producto->precio, 2) }}</td>
+                                <td class="px-4 py-2">{{ $producto->stock }}</td>
+                                <td class="px-4 py-2">
+                                    <div class="flex gap-2 flex-wrap">
+                                        @if(is_array($producto->imagenes) && count($producto->imagenes) > 0)
+                                            @foreach($producto->imagenes as $img)
+                                                <img src="{{ asset('storage/' . $img) }}" class="w-14 h-14 object-cover rounded" alt="Imagen del producto">
+                                            @endforeach
+                                        @else
+                                            <span class="text-gray-500 italic">Sin imagen</span>
+                                        @endif
+                                    </div>
                                 </td>
-                                <td>
+                                <td class="px-4 py-2">
                                     @forelse ($producto->categorias as $categoria)
-                                        <span class="badge bg-primary">{{ $categoria->nombre }}</span>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">{{ $categoria->nombre }}</span>
                                     @empty
-                                        <span class="text-muted">Sin categoría</span>
+                                        <span class="text-gray-500 italic">Sin categoría</span>
                                     @endforelse
                                 </td>
-
                                 @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                                    <td>{{ $producto->vendedor->name ?? 'Desconocido' }}</td>
+                                    <td class="px-4 py-2">{{ $producto->vendedor->name ?? 'Desconocido' }}</td>
                                 @endif
-                                @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-                                    <td class="text-center">
-                                        <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </a>
-                                        <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" class="d-inline">
+                                @if(auth()->user()->role === 'cliente')
+                                    <td class="px-4 py-2 text-center">
+                                        <form method="POST" action="{{ route('carritos.store') }}" class="flex justify-center items-center gap-2">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">
-                                                <i class="fas fa-trash-alt"></i> Eliminar
-                                            </button>
+                                            <input type="hidden" name="producto_id" value="{{ $producto->id }}">
+                                            <input type="number" name="cantidad" value="1" min="1" class="w-16 border rounded px-2 py-1 text-sm" />
+                                            <button type="submit" class="bg-blue-600 text-black px-3 py-1 rounded hover:bg-blue-700 text-sm">Agregar</button>
                                         </form>
                                     </td>
                                 @endif
-                                @if(auth()->user()->role === 'cliente')
-                                    <td class="text-center">
-                                        <form method="POST" action="{{ route('carritos.store') }}" class="d-flex justify-content-center align-items-center">
+                                @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
+                                    <td class="px-4 py-2 text-center space-x-2 whitespace-nowrap">
+                                        <a href="{{ route('productos.edit', $producto->id) }}" class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-black text-xs font-semibold rounded shadow">
+                                            <i class="fas fa-edit mr-1"></i> Editar
+                                        </a>
+                                        <form action="{{ route('productos.destroy', $producto->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
                                             @csrf
-                                            <input type="hidden" name="producto_id" value="{{ $producto->id }}">
-                                            <input type="number" name="cantidad" value="1" min="1" class="form-control w-25 me-2" />
-                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                <i class="fas fa-cart-plus"></i> Agregar
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded shadow">
+                                                <i class="fas fa-trash-alt mr-1"></i> Eliminar
                                             </button>
                                         </form>
                                     </td>

@@ -1,27 +1,57 @@
 <x-app-layout>
     @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
-        <h1>Nuevo Cliente</h1>
-        <form action="{{ route('clientes.store') }}" method="POST" style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
-            @csrf
+        <div class="container mx-auto mt-8 px-4 max-w-lg">
+            <h2 class="mb-6 text-2xl font-semibold text-black-600 text-center">Registrar Nuevo Cliente</h2>
 
-            <div>
-                <label for="name">Nombre</label>
-                <input type="text" name="name" id="name" required>
-            </div>
+            <form action="{{ route('clientes.store') }}" method="POST" class="bg-white shadow rounded-lg p-6 space-y-4">
+                @csrf
 
-            <div>
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required>
-            </div>
+                <div>
+                    <label for="name" class="block text-gray-700 font-medium mb-1">Nombre</label>
+                    <input type="text" name="name" id="name" required
+                        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
 
-            <div>
-                <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" required>
-            </div>
+                <div>
+                    <label for="email" class="block text-gray-700 font-medium mb-1">Correo Electrónico</label>
+                    <input type="email" name="email" id="email" required
+                        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
 
-            <button type="submit">Guardar</button>
-        </form>
-    @else 
-        <h2 class="text-xl font-semibold mb-4">No puedes estar aquí.</h2>
+                <div>
+                    <label for="password" class="block text-gray-700 font-medium mb-1">Contraseña</label>
+                    <input type="password" name="password" id="password" required
+                        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+
+                <div class="mt-4">
+                    <label for="subrol" class="block text-gray-700 font-medium mb-1">Elige un Subrol</label>
+                    <select id="subrol" name="subrol" required
+                        class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <option value="comprador">Comprador</option>
+                        <option value="vendedor">Vendedor</option>
+                    </select>
+                    @error('subrol')
+                        <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-between items-center mt-6">
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-black font-semibold px-5 py-2 rounded flex items-center gap-2">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+
+                    <a href="{{ route('clientes.index') }}"
+                        class="border border-gray-400 text-gray-700 hover:bg-gray-100 px-5 py-2 rounded flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    @else
+        <div class="container mx-auto mt-10 text-center">
+            <h2 class="text-xl font-semibold text-red-600">No puedes estar aquí.</h2>
+        </div>
     @endif
 </x-app-layout>

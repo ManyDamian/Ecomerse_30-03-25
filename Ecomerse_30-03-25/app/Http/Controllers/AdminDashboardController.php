@@ -61,7 +61,7 @@ class AdminDashboardController extends Controller
             }
         }
 
-        return view('admin.dashboard', compact(
+        return view('estadistica.index', compact(
             'totalUsuarios',
             'vendedores',
             'compradores',

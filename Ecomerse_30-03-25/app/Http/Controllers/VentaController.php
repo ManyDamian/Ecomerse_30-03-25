@@ -6,8 +6,8 @@ use App\Models\Venta;
 use App\Models\Producto;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Carrito;
-use App\Mail\VentaValidadaComprador;
 use App\Mail\VentaValidadaVendedor;
+use App\Mail\VentaValidadaComprador;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -132,22 +132,40 @@ public function ticket($id)
         return redirect()->route('ventas.index')->with('success', 'Venta eliminada.');
     }
 
-public function validarVenta($id)
+    public function validar($id)
 {
-    $venta = Venta::with('producto.usuario', 'usuario')->findOrFail($id);
-    $this->authorize('validar', $venta);
-
+    $venta = Venta::with('productos.vendedor', 'comprador')->findOrFail($id);
+    
+    // Cambiar estado a 'validada'
     $venta->estado = 'validada';
     $venta->save();
 
-    // Notificar al comprador
-    Mail::to($venta->usuario->email)->send(new VentaValidadaComprador($venta));
+    // Enviar correo a cada vendedor de los productos de la venta
+    foreach ($venta->productos as $producto) {
+        if ($producto->vendedor) {
+            try {
+                Mail::to($producto->vendedor->email)
+                    ->send(new VentaValidadaVendedor($venta, $producto));
+            } catch (\Exception $e) {
+                \Log::error("Error al enviar correo al vendedor (Producto ID {$producto->id}): " . $e->getMessage());
+            }
+        } else {
+            \Log::error("Producto {$producto->id} sin vendedor asignado.");
+        }
+    }
 
-    // Notificar al vendedor
-    Mail::to($venta->producto->usuario->email)->send(new VentaValidadaVendedor($venta));
+    // Enviar correo al comprador
+    try {
+        Mail::to($venta->comprador->email)
+            ->send(new VentaValidadaComprador($venta));
+    } catch (\Exception $e) {
+        \Log::error("Error al enviar correo al comprador (Venta ID {$venta->id}): " . $e->getMessage());
+    }
 
-    return redirect()->back()->with('success', 'Venta validada y notificaciones enviadas.');
+    return redirect()->back()->with('success', 'Venta validada y correos enviados (si no hubo errores).');
 }
+
+
 
 
     public function showTicket(Venta $venta)

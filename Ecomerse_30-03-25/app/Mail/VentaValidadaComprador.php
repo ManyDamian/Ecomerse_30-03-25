@@ -1,5 +1,4 @@
 <?php
-// app/Mail/VentaValidadaComprador.php
 
 namespace App\Mail;
 
@@ -13,15 +12,24 @@ class VentaValidadaComprador extends Mailable
     use Queueable, SerializesModels;
 
     public $venta;
+    public $productos;  // colección de productos
+    public $vendedor;   // aquí puedes manejar vendedores múltiples si quieres
 
     public function __construct(Venta $venta)
     {
         $this->venta = $venta;
+        $this->productos = $venta->productos; // todos los productos de la venta
+        // Si quieres, podrías extraer los vendedores de todos esos productos:
+        // $this->vendedores = $this->productos->map->vendedor->unique('id');
     }
 
     public function build()
     {
-        return $this->subject('Compra validada')
-                    ->view('emails.venta_validada_comprador');
+        return $this->subject('Tu compra ha sido validada')
+                    ->view('emails.venta.comprador')
+                    ->with([
+                        'venta' => $this->venta,
+                        'productos' => $this->productos,
+                    ]);
     }
 }

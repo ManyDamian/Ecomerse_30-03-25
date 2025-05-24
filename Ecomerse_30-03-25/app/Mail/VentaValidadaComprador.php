@@ -1,60 +1,27 @@
 <?php
+// app/Mail/VentaValidadaComprador.php
 
 namespace App\Mail;
-use App\Models\User;
-use App\Models\Producto;
+
+use App\Models\Venta;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class VentaValidadaComprador extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $producto;
-    public $vendedor;
+    public $venta;
 
-    public function __construct(Producto $producto, User $vendedor)
+    public function __construct(Venta $venta)
     {
-        $this->producto = $producto;
-        $this->vendedor = $vendedor;
+        $this->venta = $venta;
     }
 
     public function build()
     {
-        return $this->subject('Tu compra ha sido validada')
-            ->view('emails.venta_validada_comprador');
-    }
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Venta Validada Comprador',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject('Compra validada')
+                    ->view('emails.venta_validada_comprador');
     }
 }

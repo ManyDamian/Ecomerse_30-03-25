@@ -28,8 +28,7 @@ class VentaPolicy
     }
     public function validar(User $user, Venta $venta)
 {
-    // Solo el gerente puede validar ventas
-    return $user->rol === 'gerente';
+    return $user->role === 'gerente'; // o como manejes roles
 }
     public function validateVenta(User $user, Venta $venta): bool
     {

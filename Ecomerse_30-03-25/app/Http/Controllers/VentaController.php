@@ -99,26 +99,22 @@ public function ticket($id)
 {
     $venta = Venta::findOrFail($id);
 
-    // Validar campos básicos
+    // Solo permitir editar el campo 'estado'
     $request->validate([
-        'total' => 'required|numeric|min:0',
-        'validar' => 'sometimes|boolean',
+        'estado' => 'required|in:pendiente,validada',
     ]);
 
-    // Actualizar total y otros campos permitidos
-    $venta->total = $request->input('total');
-
-    // Solo el gerente puede validar la venta
-    if ($request->has('validar') && $request->input('validar')) {
-        $this->authorize('validar', $venta);  // autorización
-        if ($venta->estado === 'pendiente') {
-            $venta->estado = 'validada';
+    // Solo permitir al gerente validar
+    if ($venta->estado !== $request->estado) {
+        if ($request->estado === 'validada') {
+            $this->authorize('validar', $venta);
         }
+        $venta->estado = $request->estado;
     }
 
     $venta->save();
 
-    return redirect()->route('ventas.index')->with('success', 'Venta actualizada correctamente.');
+    return redirect()->route('ventas.index')->with('success', 'Estado de la venta actualizado correctamente.');
 }
 
 
@@ -136,29 +132,23 @@ public function ticket($id)
         return redirect()->route('ventas.index')->with('success', 'Venta eliminada.');
     }
 
-    public function validar($id)
-    {
-        $venta = Venta::with('productos.vendedor', 'usuario')->findOrFail($id);
+public function validarVenta($id)
+{
+    $venta = Venta::with('producto.usuario', 'usuario')->findOrFail($id);
+    $this->authorize('validar', $venta);
 
-        // Authorization: solo el gerente puede validar
-        $this->authorize('validar', $venta);
+    $venta->estado = 'validada';
+    $venta->save();
 
-        // Cambiar estado
-        $venta->estado = 'validada';
-        $venta->save();
+    // Notificar al comprador
+    Mail::to($venta->usuario->email)->send(new VentaValidadaComprador($venta));
 
-        // Enviar correo al comprador
-        Mail::to($venta->usuario->email)->send(new VentaValidadaComprador($venta));
+    // Notificar al vendedor
+    Mail::to($venta->producto->usuario->email)->send(new VentaValidadaVendedor($venta));
 
-        // Enviar correo a cada vendedor involucrado en la venta
-        foreach ($venta->productos as $producto) {
-            if ($producto->vendedor) {
-                Mail::to($producto->vendedor->email)->send(new VentaValidadaVendedor($venta, $producto));
-            }
-        }
+    return redirect()->back()->with('success', 'Venta validada y notificaciones enviadas.');
+}
 
-        return redirect()->route('ventas.index')->with('success', 'Venta validada y correos enviados.');
-    }
 
     public function showTicket(Venta $venta)
     {

@@ -1,7 +1,7 @@
-<h1>Tu producto ha sido vendido</h1>
-<p>Debes enviar el producto: <strong>{{ $producto->nombre }}</strong></p>
-<p>Datos del comprador:</p>
+<h1>¡Tu producto ha sido vendido!</h1>
+<p>Producto: {{ $venta->producto->nombre }}</p>
+<p>Debes enviarlo a:</p>
 <ul>
-    <li>Nombre: {{ $comprador->name }}</li>
-    <li>Email: {{ $comprador->email }}</li>
+    <li>Nombre: {{ $venta->usuario->name }}</li>
+    <li>Email: {{ $venta->usuario->email }}</li>
 </ul>

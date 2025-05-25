@@ -79,6 +79,8 @@ class VentaController extends Controller
 
   public function update(Request $request, $id)
     {
+        //agregamos para informar que venta es una variable
+        /** @var \App\Models\Venta $venta */
         $venta = Venta::with('productos.vendedor', 'comprador')->findOrFail($id);
 
         // Validar solo el campo estado

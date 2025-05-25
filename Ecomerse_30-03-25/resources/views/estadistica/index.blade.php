@@ -15,17 +15,22 @@
                         <p class="text-2xl font-bold text-blue-700">{{ $totalUsuarios }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600">Vendedores</p>
-                        <p class="text-2xl font-bold text-green-700">{{ $vendedores }}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Compradores</p>
-                        <p class="text-2xl font-bold text-cyan-700">{{ $compradores }}</p>
+                        <p class="text-sm text-gray-600">Clientes</p>
+                        <p class="text-2xl font-bold text-cyan-700">{{ $clientes }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Gerentes</p>
                         <p class="text-2xl font-bold text-cyan-700">{{ $gerentes }}</p>
                     </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Clientes Vendedores</p>
+                        <p class="text-2xl font-bold text-green-700">{{ $vendedores }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Clientes Compradores</p>
+                        <p class="text-2xl font-bold text-cyan-700">{{ $compradores }}</p>
+                    </div>
+                    
                      <div>
                         <p class="text-sm text-gray-600">Empleados</p>
                         <p class="text-2xl font-bold text-cyan-700">{{ $empleados }}</p>
@@ -111,3 +116,4 @@
         </div>
     </div>
 </x-app-layout>
+

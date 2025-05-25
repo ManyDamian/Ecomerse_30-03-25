@@ -14,13 +14,23 @@ class AdminDashboardController extends Controller
         // Total de usuarios registrados
         $totalUsuarios = User::count();
 
-        // Usuarios que han publicado al menos un producto (vendedores)
-        $vendedores = User::has('productos')->count();
+        // Vendedores: usuarios con role 'cliente' y subrol 'vendedor' 
+        $vendedores = User::where('role', 'cliente')
+            ->where('subrol', 'vendedor')
+            ->count();
 
-        // Usuarios que han realizado al menos una venta (compradores)
-        $compradores = User::has('ventas')->count();
+        // Compradores: usuarios con role 'cliente' y subrol 'comprador' 
+        $compradores = User::where('role', 'cliente')
+            ->where('subrol', 'comprador')
+            ->count();
 
-        // Productos por categoría
+        $gerentes = User::where('role', 'gerente')
+            ->count();
+
+        $empleados = User::where('role', 'empleado')
+            ->count();
+
+        // Productos por categoría con conteo
         $categoriasConConteo = Categoria::withCount('productos')->get();
 
         // Producto más vendido (por cantidad total vendida desde la tabla pivote producto_venta)
@@ -28,7 +38,7 @@ class AdminDashboardController extends Controller
             ->orderByDesc('total_vendido')
             ->first();
 
-        // Comprador más frecuente por categoría (usando relaciones Eloquent en PHP)
+        // Comprador más frecuente por categoría
         $categorias = Categoria::with('productos.ventas.comprador')->get();
         $compradoresFrecuentes = [];
 
@@ -65,6 +75,8 @@ class AdminDashboardController extends Controller
             'totalUsuarios',
             'vendedores',
             'compradores',
+            'gerentes',
+            'empleados',
             'categoriasConConteo',
             'productoMasVendido',
             'compradoresFrecuentes'

@@ -11,7 +11,7 @@ class StoreVentaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     
@@ -25,7 +25,8 @@ class StoreVentaRequest extends FormRequest
         return [
             'usuario_id' => 'required|exists:users,id',
             'total' => 'required|numeric',
-            'estado' => 'required|string|max:50',
+            'ticket' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'estado' => 'in:pendiente,validada',
         ];
     }
 }

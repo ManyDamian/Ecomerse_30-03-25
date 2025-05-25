@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
         // Crear usuarios con contraseñas
         User::create([
             'name' => 'Juan Pérez',
-            'email' => 'juan@example.com',
+            'email' => 'juan@cliente.com',
             'password' => Hash::make('password123'),
         ]);
 
         User::create([
             'name' => 'Ana García',
-            'email' => 'ana@example.com',
+            'email' => 'ana@cliente.com',
             'password' => Hash::make('password123'),
         ]);
 
@@ -54,5 +54,20 @@ class UserSeeder extends Seeder
             'password' => Hash::make('fornitesenal'),
             'role' => 'empleado'
         ]);
+
+         // Crear 70 compradores
+        User::factory(70)->create([
+            'role' => 'cliente',
+            'subrol' => 'comprador',
+        ]);
+
+        // Crear 30 vendedores
+        $vendedores = User::factory(30)->create([
+            'role' => 'cliente',
+            'subrol' => 'vendedor',
+        ]);
+
+        
+
     }
 }

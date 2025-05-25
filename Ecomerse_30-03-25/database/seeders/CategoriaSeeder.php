@@ -34,7 +34,18 @@ class CategoriaSeeder extends Seeder
 
         */
 
-        // Crear 10 categorías utilizando el Factory
-        Categoria::factory()->count(10)->create();
+         $categorias = [
+        ['nombre' => 'Ofertas', 'descripcion' => 'Productos con descuento'],
+        ['nombre' => 'Tecnología', 'descripcion' => 'Gadgets y dispositivos'],
+        ['nombre' => 'Hogar', 'descripcion' => 'Artículos para el hogar'],
+        ['nombre' => 'Gaming', 'descripcion' => 'Accesorios y consolas'],
+        ['nombre' => 'Moda', 'descripcion' => 'Ropa y accesorios'],
+    ];
+    foreach ($categorias as $categoria) {
+            Categoria::firstOrCreate(['nombre' => $categoria['nombre']], $categoria);
+
+
+        // Categoria::factory()->count(10)->create();
     }
+}
 }

@@ -22,6 +22,14 @@
                         <p class="text-sm text-gray-600">Compradores</p>
                         <p class="text-2xl font-bold text-cyan-700">{{ $compradores }}</p>
                     </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Gerentes</p>
+                        <p class="text-2xl font-bold text-cyan-700">{{ $gerentes }}</p>
+                    </div>
+                     <div>
+                        <p class="text-sm text-gray-600">Empleados</p>
+                        <p class="text-2xl font-bold text-cyan-700">{{ $empleados }}</p>
+                    </div>
                 </div>
             </div>
 

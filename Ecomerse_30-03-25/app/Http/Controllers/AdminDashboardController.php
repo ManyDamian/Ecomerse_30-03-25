@@ -30,6 +30,9 @@ class AdminDashboardController extends Controller
         $empleados = User::where('role', 'empleado')
             ->count();
 
+            $clientes = User::where('role', 'cliente')
+            ->count();
+
         // Productos por categoría con conteo
         $categoriasConConteo = Categoria::withCount('productos')->get();
 
@@ -77,6 +80,7 @@ class AdminDashboardController extends Controller
             'compradores',
             'gerentes',
             'empleados',
+            'clientes',
             'categoriasConConteo',
             'productoMasVendido',
             'compradoresFrecuentes'

@@ -1,5 +1,5 @@
 <x-app-layout>
-    @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado')
+    @if(auth()->user()->role === 'gerente' || auth()->user()->role === 'empleado' || auth()->user()->subrol === 'vendedor')
         <div class="flex justify-center mt-10">
             <form action="{{ route('productos.update', $producto->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4 max-w-xl w-full bg-white p-6 rounded shadow">
                 <h1 class="text-2xl font-bold mb-4 text-center">Editar Producto</h1>

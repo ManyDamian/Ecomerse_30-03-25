@@ -25,7 +25,15 @@
                     <label for="stock" class="block font-semibold mb-1">Stock</label>
                     <input type="number" name="stock" id="stock" required class="w-full border rounded px-3 py-2">
                 </div>
-
+                <div>
+                    <label for="categorias" class="block font-semibold mb-1">Categorías</label>
+                    <select name="categorias[]" id="categorias" multiple required class="w-full border rounded px-3 py-2">
+                        @foreach ($categorias as $categoria)
+                            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                        @endforeach
+                    </select>
+                    <small class="text-gray-600">Usa Ctrl (Windows) o Cmd (Mac) para seleccionar varias.</small>
+                </div>
                 <div>
                     <label for="imagenes" class="block font-semibold mb-1">Imágenes</label>
                     <input type="file" name="imagenes[]" id="imagenes" multiple required class="w-full">

@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use App\Models\Categoria;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -23,7 +26,8 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        return view('productos.create');  // Asegurarse de que retorna la vista 'create'
+       $categorias = Categoria::all();
+         return view('productos.create', compact('categorias'));  // Asegurarse de que retorna la vista 'create'
     }
 
    public function store(Request $request)
@@ -33,8 +37,11 @@ class ProductoController extends Controller
         'descripcion' => 'nullable|string',
         'precio' => 'required|numeric',
         'stock' => 'required|integer',
-        'imagenes.*' => 'image|max:2048', // valida cada imagen individualmente
+        'imagenes.*' => 'image|max:2048',
+        'categorias' => 'nullable|array',
+        'categorias.*' => 'exists:categorias,id',
     ]);
+
 
     $imagenes = [];
 
@@ -45,7 +52,7 @@ class ProductoController extends Controller
     }
 
     // Crear producto con datos validados + user_id + imágenes
-    Producto::create([
+        $producto = Producto::create([
         'nombre' => $validated['nombre'],
         'descripcion' => $validated['descripcion'] ?? null,
         'precio' => $validated['precio'],
@@ -53,6 +60,12 @@ class ProductoController extends Controller
         'user_id' => auth()->id(),
         'imagenes' => $imagenes, // Laravel lo guardará como JSON si está casteado en el modelo
     ]);
+
+    // Sincronizar categorías seleccionadas
+    if ($request->has('categorias')) {
+        $producto->categorias()->sync($request->categorias);
+    }
+
 
     return redirect()->route('productos.index')->with('success', 'Producto registrado correctamente.');
 }
@@ -69,69 +82,76 @@ class ProductoController extends Controller
 
     // Mostrar el formulario para editar un producto
     public function edit($id)
-{
-    $producto = Producto::with('categorias')->findOrFail($id);
-    $categorias = Categoria::all(); // Carga todas las categorías
+    {
+        $producto = Producto::with('categorias')->findOrFail($id);
 
-    return view('productos.edit', compact('producto', 'categorias'));
-}
+        $this->authorize('update', $producto); // 👈 importante
+
+        $categorias = Categoria::all();
+
+        return view('productos.edit', compact('producto', 'categorias'));
+    }
 
     // Actualizar un producto específico
     public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'descripcion' => 'nullable|string',
-        'precio' => 'required|numeric',
-        'stock' => 'required|integer',
-        'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'imagenes_a_borrar' => 'array',
-        'imagenes_a_borrar.*' => 'string',
-        'categorias' => 'nullable|array',
-        'categorias.*' => 'exists:categorias,id',
-    ]);
+    {
+        $producto = Producto::findOrFail($id);
 
-    $producto = Producto::findOrFail($id);
+        $this->authorize('update', $producto); 
 
-    // Actualiza datos básicos
-    $producto->update([
-        'nombre' => $validated['nombre'],
-        'descripcion' => $validated['descripcion'],
-        'precio' => $validated['precio'],
-        'stock' => $validated['stock'],
-    ]);
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'precio' => 'required|numeric',
+            'stock' => 'required|integer',
+            'imagenes.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'imagenes_a_borrar' => 'array',
+            'imagenes_a_borrar.*' => 'string',
+            'categorias' => 'nullable|array',
+            'categorias.*' => 'exists:categorias,id',
+        ]);
 
-    // Manejar imágenes a borrar
-    $imagenesExistentes = $producto->imagenes ?? [];
+        $producto = Producto::findOrFail($id);
 
-    if ($request->has('imagenes_a_borrar')) {
-        foreach ($request->imagenes_a_borrar as $imgABorrar) {
-            if (in_array($imgABorrar, $imagenesExistentes)) {
-                \Storage::disk('public')->delete($imgABorrar);
-                $imagenesExistentes = array_filter($imagenesExistentes, fn($img) => $img !== $imgABorrar);
+        // Actualiza datos básicos
+        $producto->update([
+            'nombre' => $validated['nombre'],
+            'descripcion' => $validated['descripcion'],
+            'precio' => $validated['precio'],
+            'stock' => $validated['stock'],
+        ]);
+
+        // Manejar imágenes a borrar
+        $imagenesExistentes = $producto->imagenes ?? [];
+
+        if ($request->has('imagenes_a_borrar')) {
+            foreach ($request->imagenes_a_borrar as $imgABorrar) {
+                if (in_array($imgABorrar, $imagenesExistentes)) {
+                    \Storage::disk('public')->delete($imgABorrar);
+                    $imagenesExistentes = array_filter($imagenesExistentes, fn($img) => $img !== $imgABorrar);
+                }
             }
         }
-    }
 
-    // Agregar nuevas imágenes
-    if ($request->hasFile('imagenes')) {
-        foreach ($request->file('imagenes') as $imagen) {
-            $ruta = $imagen->store('productos', 'public');
-            $imagenesExistentes[] = $ruta;
+        // Agregar nuevas imágenes
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $imagen) {
+                $ruta = $imagen->store('productos', 'public');
+                $imagenesExistentes[] = $ruta;
+            }
         }
+
+        // Actualizar el campo imágenes
+        $producto->imagenes = array_values($imagenesExistentes);
+        $producto->save();
+
+        // Sincronizar categorías seleccionadas
+        if ($request->has('categorias')) {
+            $producto->categorias()->sync($request->categorias);
+        }
+
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
-
-    // Actualizar el campo imágenes
-    $producto->imagenes = array_values($imagenesExistentes);
-    $producto->save();
-
-    // ✅ Sincronizar categorías seleccionadas
-    if ($request->has('categorias')) {
-        $producto->categorias()->sync($request->categorias);
-    }
-
-    return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
-}
 
 
 

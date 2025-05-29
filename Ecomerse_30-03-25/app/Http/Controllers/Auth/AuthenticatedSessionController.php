@@ -25,11 +25,12 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'name' => ['required', 'string'],
+           // 'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt($request->only(/*'email'*/'name', 'password'))) {
             $request->session()->regenerate();
 
             // Redirigir según el rol del usuario
